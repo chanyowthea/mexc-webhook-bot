@@ -1,0 +1,1 @@
+web: python3 mexc_webhook_bot.py
