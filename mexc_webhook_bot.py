@@ -11,7 +11,7 @@ API_KEY = os.getenv('API_KEY')
 SECRET_KEY = os.getenv('SECRET_KEY')
 BASE_URL = 'https://api.mexc.com'
 
-def place_order(symbol, side, quantity=10.0, order_type='MARKET'):
+def place_order(symbol, side, quantity=1.0, order_type='MARKET'):
     path = '/api/v3/order'
     timestamp = int(time.time() * 1000)
 
@@ -36,14 +36,15 @@ def place_order(symbol, side, quantity=10.0, order_type='MARKET'):
 @app.route('/webhook', methods=['POST'])
 def webhook():
     data = request.get_json()
-    print(f"تم الاستلام: {data}")
+    print(f"receive {data}",flush=True)
 
     try:
         action, symbol = data['message'].split(',')
         result = place_order(symbol.upper(), action.lower())
-        return jsonify({'status': 'تم التنفيذ', 'response': result})
+        return jsonify({'status': 'has run', 'response': result})
     except Exception as e:
-        return jsonify({'status': 'خطأ', 'message': str(e)}), 400
+        return jsonify({'status': 'error', 'message': str(e)}), 400
 
 if __name__ == '__main__':
+    print(f"Start web hook for mexc!!!",flush=True)
     app.run(host='0.0.0.0', port=5000)
