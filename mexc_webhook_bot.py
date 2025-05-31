@@ -37,10 +37,13 @@ def place_order(symbol, side, quantity=1.0, order_type='MARKET'):
 def webhook():
     data = request.get_json()
     print(f"receive {data}",flush=True)
-
+    # {'id': 'Long Exit', 'action': 'sell', 'marketPosition': 'flat', 'prevMarketPosition': 'long', 'marketPositionSize': '0', 'prevMarketPositionSize': '0.012985', 'instrument': 'BTCUSDC', 'timestamp': '2025-05-31T15:36:39Z', 'amount': '0.012985'}
     try:
-        action, symbol = data['message'].split(',')
+        # action, symbol = data['message'].split(',')
+        action = data['action']
+        symbol = data['instrument']
         result = place_order(symbol.upper(), action.lower())
+        print(f"Order result: {result}", flush=True)
         return jsonify({'status': 'has run', 'response': result})
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 400
