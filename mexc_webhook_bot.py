@@ -17,7 +17,7 @@ import mexc_spot_v3
 # 'MARKET'
 def place_order(symbol, side, price_,quantity=0.00001, order_type='LIMIT'):
     # quantity = quoteOrderQty_ / price_
-    quoteOrderQty_ = quantity * price_
+    quoteOrderQty_ = quantity * float(price_)
     params = {
         "symbol": symbol,
         "side": side,
@@ -67,6 +67,7 @@ def webhook():
         print(f"Order result: {result}", flush=True)
         return jsonify({'status': 'has run', 'response': result})
     except Exception as e:
+        print(f"Error: {str(e)}", flush=True)
         return jsonify({'status': 'error', 'message': str(e)}), 400
 
 if __name__ == '__main__':
@@ -80,4 +81,18 @@ if __name__ == '__main__':
     # # ret = place_order('BTCUSDC', 'BUY', Price, quantity=0.00001, order_type='LIMIT')
     # ret = place_order('BTCUSDC', 'SELL', Price, quantity=0.00001, order_type='LIMIT')
     # print(f"Initial Order Result: {ret}", flush=True)
-    app.run(host='0.0.0.0', port=5000)
+    # app.run(host='0.0.0.0', port=5000)
+
+    # data = {'action': 'sell', 'instrument': 'BTCUSDC', 'price': '104424.47'}
+    # try:
+    #     # action, symbol = data['message'].split(',')
+    #     action = data['action']
+    #     symbol = data['instrument']
+    #     price = data['price']
+    #     result = place_order(symbol.upper(), action.upper(),price)
+    #     print(f"Order result: {result}", flush=True)
+    #     # return jsonify({'status': 'has run', 'response': result})
+    # except Exception as e:
+    #     print(f"Error: {str(e)}", flush=True)
+    #     # return jsonify({'status': 'error', 'message': str(e)}), 400
+
