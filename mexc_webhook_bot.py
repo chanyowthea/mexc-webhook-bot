@@ -51,6 +51,8 @@ def place_order(symbol, side, price_,quantity=0.00001, order_type='LIMIT'):
     # response = requests.post(BASE_URL + path, params=params, headers=headers)
     # return response.json()
 
+import time
+
 @app.route('/webhook', methods=['POST'])
 def webhook():
     data = request.get_json()
@@ -63,16 +65,86 @@ def webhook():
         action = data['action']
         symbol = data['instrument']
         price = data['price']
-        result = place_order(symbol.upper(), action.upper(),price)
+            
+        # params = {"symbol": symbol}
+        # Price = float(market.get_price(params)['price'])
+        # print(f"Current Price: {Price}", flush=True)
+            
+        params = {
+        "symbol": symbol.upper(),
+        "interval": "1m",
+        "limit": "5",
+        }
+        Kline = market.get_kline(params)
+        prev_k = Kline[-2]
+        prev_k_h = prev_k[2]
+        prev_k_l = prev_k[3]
+        cur_k_c = Kline[-1][4]
+
+        # print(Kline)
+        # seconds = time.time()
+        # print time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(seconds))
+
+        print('prev_k=',prev_k,prev_k_h, prev_k_l, cur_k_c,flush=True)
+        Price = price
+        order_type = 'LIMIT'  # Default order type
+        if action == "BUY":
+            if cur_k_c > prev_k_h:
+                order_type = 'MARKET'
+            else:
+                Price = prev_k_h
+        else:
+            if cur_k_c < prev_k_l:
+                order_type = 'MARKET'
+            else:
+                Price = prev_k_l
+
+        result = place_order(symbol.upper(), action.upper(),Price,order_type=order_type)
         print(f"Order result: {result}", flush=True)
         return jsonify({'status': 'has run', 'response': result})
     except Exception as e:
         print(f"Error: {str(e)}", flush=True)
         return jsonify({'status': 'error', 'message': str(e)}), 400
 
+
+
+# import os
+# proxy = 'http://127.0.0.1:7890' # 代理设置，此处修改
+# os.environ['HTTP_PROXY'] = proxy 
+# os.environ['HTTPS_PROXY'] = proxy 
+
+
 if __name__ == '__main__':
     trade = mexc_spot_v3.mexc_trade()
-    print(f"Start web hook for mexc!!!",flush=True)
+    market = mexc_spot_v3.mexc_market()
+    app.run(host='0.0.0.0', port=5000)
+
+    # params = {
+    # "symbol": "BTCUSDC",
+    # "interval": "1m",
+    # "limit": "5",
+    # # "startTime": "1705029500000",
+    # # "endTime": "1705029599909"
+    # }
+    # Kline = market.get_kline(params)
+    # prev_k = Kline[-2]
+    # prev_k_h = prev_k[2]
+    # prev_k_l = prev_k[3]
+    # cur_k_c = Kline[-1][4]
+
+    # side = 'BUY'
+    # # print(Kline)
+    # print(prev_k_h, cur_k_c)
+    # if side == "BUY":
+    #     if cur_k_c > prev_k_h:
+    #         order_type = 'MARKET'
+    #         Price = cur_k_c
+    #     elif cur_k_c < prev_k_l:
+    #         order_type = 'MARKET'
+    #         Price = cur_k_c
+
+    # market.get_kline({"symbol": "BTCUSDC", "interval": "1m"})
+    # print(f"Start web hook for mexc!!!",flush=True)
 
     # params = {"symbol": "BTCUSDC"}
     # market = mexc_spot_v3.mexc_market()
@@ -82,8 +154,10 @@ if __name__ == '__main__':
     # ret = place_order('BTCUSDC', 'SELL', Price, quantity=0.00001, order_type='LIMIT')
     # print(f"Initial Order Result: {ret}", flush=True)
 
-    
-    app.run(host='0.0.0.0', port=5000)
+
+
+
+
 
     # data = {'action': 'sell', 'instrument': 'BTCUSDC', 'price': '104424.47'}
     # try:
