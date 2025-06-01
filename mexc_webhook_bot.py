@@ -91,11 +91,13 @@ def webhook():
         if action == "BUY":
             if cur_k_c > prev_k_h:
                 order_type = 'MARKET'
+                Price = cur_k_c
             else:
                 Price = prev_k_h
         else:
             if cur_k_c < prev_k_l:
                 order_type = 'MARKET'
+                Price = cur_k_c
             else:
                 Price = prev_k_l
 
