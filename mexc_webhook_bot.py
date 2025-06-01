@@ -81,7 +81,9 @@ if __name__ == '__main__':
     # # ret = place_order('BTCUSDC', 'BUY', Price, quantity=0.00001, order_type='LIMIT')
     # ret = place_order('BTCUSDC', 'SELL', Price, quantity=0.00001, order_type='LIMIT')
     # print(f"Initial Order Result: {ret}", flush=True)
-    # app.run(host='0.0.0.0', port=5000)
+
+    
+    app.run(host='0.0.0.0', port=5000)
 
     # data = {'action': 'sell', 'instrument': 'BTCUSDC', 'price': '104424.47'}
     # try:
