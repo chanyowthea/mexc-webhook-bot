@@ -24,7 +24,7 @@ def place_order(symbol, side, price_,quantity=0.00001, order_type='LIMIT'):
         "type": order_type,
         "price": price_,
         "quantity": quantity,
-        'quoteOrderQty': quoteOrderQty_,
+        # 'quoteOrderQty': quoteOrderQty_,
     }
     print(f"place_order params: {params}", flush=True)
     PlaceOrder = trade.post_order(params)
