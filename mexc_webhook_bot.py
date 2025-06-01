@@ -15,7 +15,7 @@ import mexc_spot_v3
 
 
 # 'MARKET'
-def place_order(symbol, side, price_,quantity=0.00001, order_type='LIMIT'):
+def place_order(symbol, side, price_,quantity=0.0005, order_type='LIMIT'):
     # quantity = quoteOrderQty_ / price_
     quoteOrderQty_ = quantity * float(price_)
     params = {
