@@ -87,19 +87,19 @@ def webhook():
 
         print('prev_k=',prev_k,prev_k_h, prev_k_l, cur_k_c,flush=True)
         Price = price
-        order_type = 'LIMIT'  # Default order type
+        order_type = 'MARKET'  # Default order type
         if action == "BUY":
             if cur_k_c > prev_k_h:
                 order_type = 'MARKET'
                 Price = cur_k_c
             else:
-                Price = prev_k_h
+                Price = prev_k_h+0.02
         else:
             if cur_k_c < prev_k_l:
                 order_type = 'MARKET'
                 Price = cur_k_c
             else:
-                Price = prev_k_l
+                Price = prev_k_l-0.02
 
         result = place_order(symbol.upper(), action.upper(),Price,order_type=order_type)
         print(f"Order result: {result}", flush=True)
@@ -173,4 +173,3 @@ if __name__ == '__main__':
     # except Exception as e:
     #     print(f"Error: {str(e)}", flush=True)
     #     # return jsonify({'status': 'error', 'message': str(e)}), 400
-
