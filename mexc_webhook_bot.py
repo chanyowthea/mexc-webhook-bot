@@ -93,13 +93,13 @@ def webhook():
                 order_type = 'MARKET'
                 Price = cur_k_c
             else:
-                Price = prev_k_h+0.02
+                Price = float(prev_k_h)+0.02
         else:
             if cur_k_c < prev_k_l:
                 order_type = 'MARKET'
                 Price = cur_k_c
             else:
-                Price = prev_k_l-0.02
+                Price = float(prev_k_l)-0.02
 
         result = place_order(symbol.upper(), action.upper(),Price,order_type=order_type)
         print(f"Order result: {result}", flush=True)
