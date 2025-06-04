@@ -38,7 +38,7 @@ def webhook():
         action = data['action']
         symbol = data['instrument']
         price = data['price']
-        quantity = data['quantity']
+        quantity = float(data['quantity'])
         result = place_order(symbol.upper(), action.upper(),price,quantity=quantity)
         print(f"Order result: {result}", flush=True)
         return jsonify({'status': 'has run', 'response': result})
